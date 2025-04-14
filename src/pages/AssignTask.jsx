@@ -14,10 +14,7 @@ const AssignTask = () => {
         dueDate: "",
         assignedToId: "",
         priority: "medium",
-        estimatedHours: "",
-        assignedBy: 0,
-        assignedTo: 0,
-        timeLogs: []
+        estimatedHours: ""
     });
 
     const { token, user } = useAuth();
@@ -67,11 +64,9 @@ const AssignTask = () => {
                 title: form.title,
                 description: form.description,
                 dueDate: form.dueDate,
-                // priority: form.priority,
-                // estimatedHours: form.estimatedHours,
-                assignedToId: form.assignedToId, // Just the ID
-                // assignedById: user.id, // Current user's ID
-                // status: "Assigned",
+                priority: form.priority,
+                estimatedHours: form.estimatedHours,
+                assignedToId: form.assignedToId
             };
             
             await API.post("tasks", taskData, {

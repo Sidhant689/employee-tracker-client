@@ -133,7 +133,7 @@ const MyTasks = () => {
       
       // Update the task in the state
       setTasks(prevTasks => prevTasks.map(task => 
-        task.id === taskId ? { ...task, status: 'completed' } : task
+        task.id === taskId ? { ...task, status: 'Done' } : task
       ));
       
     } catch (err) {
@@ -156,7 +156,7 @@ const MyTasks = () => {
     switch (filter) {
       case 'active':
         return tasks.filter(task => task.status === 'InProgress');
-      case 'completed':
+      case 'Done':
         return tasks.filter(task => task.status === 'Done');
       case 'Assigned':
         return tasks.filter(task => task.status == 'Assigned');
@@ -370,7 +370,7 @@ const MyTasks = () => {
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                 <h3 className="text-gray-700 font-medium mb-2">Tasks Completed</h3>
                 <p className="text-2xl font-bold text-green-600">
-                  {tasks.filter(task => task.status === 'completed').length} / {tasks.length}
+                  {tasks.filter(task => task.status === 'Done').length} / {tasks.length}
                 </p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
@@ -383,7 +383,7 @@ const MyTasks = () => {
                 <h3 className="text-gray-700 font-medium mb-2">Tasks Due Soon</h3>
                 <p className="text-2xl font-bold text-yellow-600">
                   {tasks.filter(task => {
-                    if (!task.dueDate || task.status === 'completed') return false;
+                    if (!task.dueDate || task.status === 'Done') return false;
                     const dueDate = new Date(task.dueDate);
                     const today = new Date();
                     const diffTime = dueDate - today;
