@@ -1,5 +1,5 @@
 // Login.jsx
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
     const [err, setErr] = useState('');
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
@@ -18,8 +19,14 @@ const Login = () => {
         setLoading(true);
         
         try {
-            const res = await API.post('/auth/login', { email, password });
-            login(res.data.token);
+            const res = await API.post('/auth/login', { 
+                email, 
+                password,
+                rememberMe
+            });
+            
+            const { accessToken, refreshToken, expiresAt, isPersistent } = res.data;
+            login(accessToken, refreshToken, expiresAt, isPersistent);
             navigate('/dashboard');
         } catch (error) {
             setErr(error.response?.data?.message || 'Invalid credentials');
@@ -74,6 +81,19 @@ const Login = () => {
                                 className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             />
+                        </div>
+                        
+                        <div className="flex items-center">
+                            <input
+                                id="rememberMe"
+                                type="checkbox"
+                                checked={rememberMe}
+                                onChange={(e) => setRememberMe(e.target.checked)}
+                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            />
+                            <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700">
+                                Remember me
+                            </label>
                         </div>
                     </div>
                     

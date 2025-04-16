@@ -11,6 +11,7 @@ import Navbar from './components/layout/Navbar';
 import AssignTask from './pages/AssignTask';
 import MyTasks from './pages/MyTasks';
 import AdminReports from './pages/AdminReports';
+import UserForm from './pages/UserForm';
 
 function App() {
   return (
@@ -50,6 +51,13 @@ function App() {
               <AdminReports />
             </ProtectedRoute>
           } />
+          <Route path="/users" element={
+            <ProtectedRoute roles={['Admin']}>
+              <UserForm />
+            </ProtectedRoute>
+          } />
+          
+          {/* 404 Route */}
 
           {/* 404 Fallback */}
           <Route path="*" element={<div>404 - Page Not Found</div>} />

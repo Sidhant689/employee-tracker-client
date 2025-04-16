@@ -36,7 +36,6 @@ const MyTasks = () => {
   const fetchTasks = async () => {
     setLoading(true);
     setError('');
-    debugger
     try {
       const res = await API.get('tasks/assigned-to-me', {
         headers: { Authorization: `Bearer ${token}` }
@@ -159,22 +158,61 @@ const MyTasks = () => {
       case 'Done':
         return tasks.filter(task => task.status === 'Done');
       case 'Assigned':
-        return tasks.filter(task => task.status == 'Assigned');
+        return tasks.filter(task => task.status === 'Assigned');
       default:
         return tasks;
     }
   };
 
   const getTaskPriorityClass = (priority) => {
+    debugger
     switch (priority) {
-      case 'high':
-        return 'border-red-400 bg-red-50';
-      case 'medium':
-        return 'border-yellow-400 bg-yellow-50';
-      case 'low':
-        return 'border-green-400 bg-green-50';
+      case 'High':
+        return 'border-red-500 bg-red-50';
+      case 'Medium':
+        return 'border-yellow-500 bg-yellow-50';
+      case 'Low':
+        return 'border-green-500 bg-green-50';
       default:
         return 'border-gray-200';
+    }
+  };
+
+  const getPriorityBadgeClass = (priority) => {
+    switch (priority) {
+      case 'High':
+        return 'bg-red-100 text-red-800 border border-red-300';
+      case 'Medium':
+        return 'bg-yellow-100 text-yellow-800 border border-yellow-300';
+      case 'Low':
+        return 'bg-green-100 text-green-800 border border-green-300';
+      default:
+        return 'bg-gray-100 text-gray-800 border border-gray-300';
+    }
+  };
+
+  const getPriorityIcon = (priority) => {
+    switch (priority) {
+      case 'high':
+        return (
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+          </svg>
+        );
+      case 'medium':
+        return (
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+          </svg>
+        );
+      case 'low':
+        return (
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          </svg>
+        );
+      default:
+        return null;
     }
   };
 
@@ -216,6 +254,21 @@ const MyTasks = () => {
             </div>
           </div>
         )}
+
+        <div className="mb-6 flex flex-wrap gap-2">
+          <div className="flex items-center bg-red-50 text-red-800 px-3 py-1 rounded-md border border-red-200">
+            <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+            <span>High Priority</span>
+          </div>
+          <div className="flex items-center bg-yellow-50 text-yellow-800 px-3 py-1 rounded-md border border-yellow-200">
+            <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+            <span>Medium Priority</span>
+          </div>
+          <div className="flex items-center bg-green-50 text-green-800 px-3 py-1 rounded-md border border-green-200">
+            <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+            <span>Low Priority</span>
+          </div>
+        </div>
 
         <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
           <div className="p-4 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center">
@@ -277,21 +330,16 @@ const MyTasks = () => {
               {filteredTasks.map(task => (
                 <div 
                   key={task.id} 
-                  className={`border-l-4 rounded-md bg-white shadow p-4 ${getTaskPriorityClass(task.priority)}`}
+                  className={`border-l-4 rounded-md bg-white shadow p-4 ${getTaskPriorityClass(task.priority)} hover:shadow-lg transition-shadow`}
                 >
                   <div className="flex justify-between items-start mb-3">
                     <h3 className="font-semibold text-lg">{task.title}</h3>
-                    <div>
-                      {task.priority && (
-                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                          task.priority === 'high' ? 'bg-red-100 text-red-800' :
-                          task.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-green-100 text-green-800'
-                        }`}>
-                          {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
-                        </span>
-                      )}
-                    </div>
+                    {task.priority && (
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPriorityBadgeClass(task.priority)}`}>
+                        {getPriorityIcon(task.priority)}
+                        {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                      </span>
+                    )}
                   </div>
                   
                   <p className="text-gray-600 mb-4">{task.description}</p>

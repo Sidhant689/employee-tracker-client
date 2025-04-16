@@ -32,6 +32,11 @@ const Navbar = () => {
                   Reports
                 </Link>
               )}
+              {user?.role === 'Admin' && (
+                <Link to="/users" className={`py-2 px-1 hover:text-blue-300 transition-colors ${isActive('/users')}`}>
+                  Users
+                </Link>
+              )}
               {(user?.role === 'Admin' || user?.role === 'Manager') && (
                 <Link to="/assign-task" className={`py-2 px-1 hover:text-blue-300 transition-colors ${isActive('/assign-task')}`}>
                   Assign Task

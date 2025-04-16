@@ -17,7 +17,7 @@ const Dashboard = () => {
         // Fetch dashboard stats
         if (user) {
             setLoading(true);
-            API.get('/api/dashboard/stats', {
+            API.get('dashboard/stats', {
                 headers: { Authorization: `Bearer ${token}` }
             })
             .then(res => {
